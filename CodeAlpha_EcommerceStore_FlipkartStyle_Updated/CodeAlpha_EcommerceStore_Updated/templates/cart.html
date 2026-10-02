@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Your Cart - LumiStore{% endblock %}
+{% block content %}
+<div class="simple-page">
+    <a href="{{ url_for('index') }}" class="back-link">← Continue shopping</a>
+    <h1 class="page-title">Your Cart</h1>
+
+    {% if products %}
+        <div class="cart-list">
+        {% for item in products %}
+            <div class="cart-item">
+                <img src="{{ item.image }}" alt="{{ item.name }}">
+                <div class="cart-item-info">
+                    <h3>{{ item.name }}</h3>
+                    <p>${{ "%.2f"|format(item.price) }}</p>
+                    <form method="POST" action="{{ url_for('update_cart', product_id=item.id) }}">
+                        <input type="number" name="quantity" min="1" value="{{ item.quantity }}">
+                        <button class="small-button">Update</button>
+                        <a class="remove-link" href="{{ url_for('remove_from_cart', product_id=item.id) }}">Remove</a>
+                    </form>
+                </div>
+                <strong>${{ "%.2f"|format(item.subtotal) }}</strong>
+            </div>
+        {% endfor %}
+        </div>
+        <div class="cart-total">
+            <span>Total</span>
+            <strong>${{ "%.2f"|format(total) }}</strong>
+        </div>
+        <a href="{{ url_for('checkout') }}" class="primary-button full-button">Proceed to Checkout</a>
+    {% else %}
+        <div class="empty-box">
+            <h2>Your cart is empty</h2>
+            <p>Add products from the dashboard to continue.</p>
+            <a href="{{ url_for('index') }}" class="primary-button">Browse Products</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

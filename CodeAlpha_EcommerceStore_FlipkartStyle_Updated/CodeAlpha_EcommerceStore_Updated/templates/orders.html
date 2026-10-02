@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Orders - LumiStore{% endblock %}
+{% block content %}
+<div class="simple-page">
+    <a href="{{ url_for('index') }}" class="back-link">← Back to shop</a>
+    <h1 class="page-title">My Orders</h1>
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+            <div>
+                <strong>Order #LM-{{ "%05d"|format(order.id) }}</strong>
+                <p>{{ order.created_at }}</p>
+            </div>
+            <div class="order-right">
+                <strong>${{ "%.2f"|format(order.total) }}</strong>
+                <span class="status-pill">{{ order.status }}</span>
+                <small class="payment-method">Paid via {{ order.payment_method or "COD" }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-box">
+            <h2>No orders yet</h2>
+            <p>Your placed orders will appear here.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
