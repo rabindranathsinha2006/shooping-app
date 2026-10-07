@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed - LumiStore{% endblock %}
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card success-card">
+        <div class="success-symbol">✓</div>
+        <h1>Order Confirmed!</h1>
+        <p>Your order #LM-{{ "%05d"|format(order_id) }} has been placed successfully.</p>
+        <h2>${{ "%.2f"|format(total) }}</h2>
+        <a href="{{ url_for('orders') }}" class="primary-button">View Orders</a>
+        <a href="{{ url_for('index') }}" class="text-link">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

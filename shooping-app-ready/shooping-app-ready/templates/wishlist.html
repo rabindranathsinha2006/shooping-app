@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Wishlist - LumiStore{% endblock %}
+{% block content %}
+<div class="simple-page">
+    <a href="{{ url_for('index') }}" class="back-link">← Continue shopping</a>
+    <div class="wishlist-page-head">
+        <div>
+            <h1 class="page-title">My Wishlist</h1>
+            <p class="muted-text">Save products you want to buy later.</p>
+        </div>
+        <span class="wishlist-count-pill">{{ products|length }} saved</span>
+    </div>
+
+    {% if products %}
+    <div class="wishlist-grid">
+        {% for product in products %}
+        <article class="wishlist-card">
+            <a href="{{ url_for('product', product_id=product.id) }}">
+                <img src="{{ product.image }}" alt="{{ product.name }}">
+            </a>
+            <div class="wishlist-card-body">
+                <span class="detail-category">{{ product.category }}</span>
+                <h3>{{ product.name }}</h3>
+                <div class="wishlist-price">${{ "%.2f"|format(product.price) }}</div>
+                <div class="wishlist-actions">
+                    <a class="primary-button" href="{{ url_for('add_to_cart', product_id=product.id) }}">Add to Cart</a>
+                    <button class="wishlist-remove-btn js-wishlist-toggle" data-product-id="{{ product.id }}" data-wishlisted="true">♥</button>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-box">
+        <div class="empty-heart">♡</div>
+        <h2>Your wishlist is empty</h2>
+        <p>Tap the heart on any product to save it here.</p>
+        <a href="{{ url_for('index') }}" class="primary-button">Explore Products</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

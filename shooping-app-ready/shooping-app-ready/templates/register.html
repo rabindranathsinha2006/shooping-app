@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Register - LumiStore{% endblock %}
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="brand-logo large-logo">▣</div>
+        <h1>Create Account</h1>
+        <p>Join LumiStore today.</p>
+        <form method="POST">
+            <input type="text" name="name" placeholder="Full name" required>
+            <input type="email" name="email" placeholder="Email address" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button class="primary-button full-button" type="submit">Register</button>
+        </form>
+        <p>Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Checkout - LumiStore{% endblock %}
+{% block content %}
+<div class="simple-page checkout-page">
+    <a href="{{ url_for('cart') }}" class="back-link">← Back to cart</a>
+    <div class="checkout-layout">
+        <main>
+            <h1 class="page-title">Secure Checkout</h1>
+            <div class="checkout-step-card">
+                <div class="checkout-step-title"><span>1</span><div><strong>Delivery Address</strong><small>Where should we deliver your order?</small></div></div>
+                <input id="addressInput" form="paymentForm" type="text" name="address" placeholder="House / Flat, Street, City, PIN code" required>
+            </div>
+
+            <div class="checkout-step-card">
+                <div class="checkout-step-title"><span>2</span><div><strong>Payment Options</strong><small>Choose a payment method</small></div></div>
+                <form id="paymentForm" method="POST">
+                    <label class="payment-option selected">
+                        <input type="radio" name="payment_method" value="UPI" checked>
+                        <span class="payment-icon">↗</span>
+                        <span><strong>UPI</strong><small>Google Pay, PhonePe, Paytm & more</small></span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="CARD">
+                        <span class="payment-icon">▣</span>
+                        <span><strong>Credit / Debit Card</strong><small>Visa, Mastercard, RuPay</small></span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="NETBANKING">
+                        <span class="payment-icon">▤</span>
+                        <span><strong>Net Banking</strong><small>All major Indian banks</small></span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="COD">
+                        <span class="payment-icon">₹</span>
+                        <span><strong>Cash on Delivery</strong><small>Pay when your order arrives</small></span>
+                    </label>
+                    <input type="hidden" id="hiddenAddress" name="address" value="">
+                    <button class="primary-button full-button place-order-button" type="submit">Place Order</button>
+                </form>
+            </div>
+        </main>
+
+        <aside class="checkout-summary-card">
+            <h2>Price Details</h2>
+            {% for item in products %}
+            <div class="checkout-row"><span>{{ item.name }} × {{ item.quantity }}</span><strong>${{ "%.2f"|format(item.subtotal) }}</strong></div>
+            {% endfor %}
+            <div class="checkout-row"><span>Delivery</span><strong class="free-text">FREE</strong></div>
+            <div class="checkout-total"><span>Total Amount</span><strong>${{ "%.2f"|format(total) }}</strong></div>
+            <div class="secure-note">✓ 100% Secure Checkout</div>
+        </aside>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const address = document.getElementById('addressInput');
+    const hidden = document.getElementById('hiddenAddress');
+    const form = document.getElementById('paymentForm');
+    form.addEventListener('submit', function () { hidden.value = address.value; });
+    document.querySelectorAll('.payment-option input').forEach(function (input) {
+        input.addEventListener('change', function () {
+            document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+            this.closest('.payment-option').classList.add('selected');
+        });
+    });
+});
+</script>
+{% endblock %}
