@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}LumiStore - Home{% endblock %}
+
+{% block content %}
+<div class="mobile-store">
+
+    <header class="store-header">
+        <div class="brand-area">
+            <div class="brand-logo">▣</div>
+            <span class="brand-name">LumiStore</span>
+        </div>
+
+        <div class="header-actions">
+            <span>⌕</span>
+            <span class="notification-icon">♧</span>
+            <span class="profile-circle">
+                {{ session.get('user_name', 'S')[0]|upper }}
+            </span>
+        </div>
+    </header>
+
+    <div class="tracking-card">
+        <div class="tracking-icon">▣</div>
+        <div class="tracking-content">
+            <strong>Order #LM-8921 • In Transit</strong>
+            <small>Arriving Today 6:00 PM</small>
+        </div>
+        <a href="{{ url_for('orders') }}" class="track-btn">Track ›</a>
+    </div>
+
+    <section class="greeting-section">
+        <div>
+            <h1>Hello, {{ session.get('user_name', 'Sarah') }} 👋</h1>
+            <p>Discover curated essentials made just for you</p>
+        </div>
+        <button class="magic-button">✣</button>
+    </section>
+
+    <div class="search-wrapper">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="productSearch"
+               placeholder="Search Scandinavian decor, audio...">
+        <button class="filter-button">☷</button>
+    </div>
+
+    <div class="category-scroll">
+        <button class="category active" data-category="all">◉ All</button>
+        <button class="category" data-category="Trending">◷ Trending</button>
+        <button class="category" data-category="Tech & Audio">♬ Tech & Audio</button>
+        <button class="category" data-category="Home">⌂ Home</button>
+        <button class="category" data-category="Fashion">✦ Fashion</button>
+    </div>
+
+    <section class="promo-banner">
+        <div class="promo-top">
+            <span class="limited-label">LIMITED DROP</span>
+            <span class="discount-label">-40% OFF</span>
+        </div>
+        <h2>Mid-Season Mega Sale</h2>
+        <p>Use code <strong>LUMI40</strong> at checkout</p>
+        <div class="promo-bottom">
+            <a href="#products" class="shop-now-btn">Shop Now ↗</a>
+            <span>Ends in 4h 32m</span>
+        </div>
+    </section>
+
+    <div class="quick-actions">
+        <div class="quick-item">
+            <div class="quick-icon orange">%</div>
+            <span>Daily Deals</span>
+        </div>
+        <div class="quick-item">
+            <div class="quick-icon blue">✧</div>
+            <span>New Drops</span>
+        </div>
+        <a class="quick-item quick-link" href="{{ url_for('wishlist') if session.get('user_id') else url_for('login') }}">
+            <div class="quick-icon pink">♥</div>
+            <span>Wishlist</span>
+        </a>
+        <div class="quick-item">
+            <div class="quick-icon purple">ϟ</div>
+            <span>Flash</span>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <h2>Curated For You <span>•</span></h2>
+        <a href="#products">See all ›</a>
+    </div>
+
+    <section class="product-grid" id="products">
+        {% for product in products %}
+        <div class="product-card"
+             data-category="{{ product.category }}"
+             data-name="{{ product.name|lower }}">
+
+            <div class="product-image-wrapper">
+                {% if loop.index == 1 %}
+                    <span class="product-badge sale-badge">-25%</span>
+                {% elif loop.index == 2 %}
+                    <span class="product-badge top-badge">Top Pick</span>
+                {% endif %}
+
+                <button class="wishlist-btn js-wishlist-toggle{% if product.id in wishlist_ids %} wishlisted{% endif %}"
+                        type="button" data-product-id="{{ product.id }}"
+                        data-wishlisted="{{ 'true' if product.id in wishlist_ids else 'false' }}"
+                        title="Add to wishlist">{{ '♥' if product.id in wishlist_ids else '♡' }}</button>
+
+                <a href="{{ url_for('product', product_id=product.id) }}">
+                    <img src="{{ product.image }}"
+                         alt="{{ product.name }}"
+                         class="product-image">
+                </a>
+            </div>
+
+            <div class="product-rating">
+                ★ 4.{{ loop.index + 1 }}
+                <span>({{ 120 + loop.index * 23 }})</span>
+            </div>
+
+            <h3 class="product-name">{{ product.name }}</h3>
+
+            <div class="product-bottom">
+                <div class="price-area">
+                    <strong>${{ "%.0f"|format(product.price) }}</strong>
+                    <small>
+                        {% if loop.index % 2 == 0 %}
+                            Sustainable
+                        {% else %}
+                            Ships in 2 days
+                        {% endif %}
+                    </small>
+                </div>
+
+                <a href="{{ url_for('add_to_cart', product_id=product.id) }}"
+                   class="add-cart-btn">+</a>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+
+    <section class="store-promise">
+        <p class="promise-title">THE LUMISTORE PROMISE</p>
+        <div class="promise-grid">
+            <div class="promise-item">
+                <span>▱</span>
+                <strong>Free 2-Day</strong>
+                <small>On orders $50+</small>
+            </div>
+            <div class="promise-item">
+                <span>◉</span>
+                <strong>30-Day Free</strong>
+                <small>Returns & exchanges</small>
+            </div>
+            <div class="promise-item">
+                <span>♧</span>
+                <strong>24/7 Concierge</strong>
+                <small>Live human chat</small>
+            </div>
+        </div>
+    </section>
+
+    <nav class="bottom-navigation">
+        <a href="{{ url_for('index') }}" class="bottom-nav-item active">
+            <span>⌂</span>
+            <small>Shop</small>
+        </a>
+        <a href="{{ url_for('wishlist') if session.get('user_id') else url_for('login') }}" class="bottom-nav-item">
+            <span>♥</span>
+            <small>Wishlist</small>
+            {% if wishlist_count > 0 %}<b class="cart-count">{{ wishlist_count }}</b>{% endif %}
+        </a>
+        <a href="{{ url_for('cart') }}" class="bottom-nav-item">
+            <span>▣</span>
+            <small>Cart</small>
+            {% if cart_count > 0 %}
+                <b class="cart-count">{{ cart_count }}</b>
+            {% endif %}
+        </a>
+        <a href="{{ url_for('orders') }}" class="bottom-nav-item">
+            <span>▤</span>
+            <small>Orders</small>
+        </a>
+        <a href="{{ url_for('login') }}" class="bottom-nav-item">
+            <span>♙</span>
+            <small>Account</small>
+        </a>
+    </nav>
+</div>
+{% endblock %}
